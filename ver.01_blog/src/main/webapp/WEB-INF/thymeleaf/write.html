@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/static/css/bootstrap.css}">
+</head>
+
+<body>
+	<div class="container">
+		<div th:replace="components::nav"></div>
+
+		<div class="row">
+			<div th:replace="components::aside"></div>
+
+			<div class="col-lg-9" th:object="${post}">
+				<form th:action="@{/{userId}/savePost (userId=${session.userId})}"
+					method="post">
+					<div class="form-inline mb-3">
+						<select class="form-control" id="categorySelect" name="categoryNo">
+							<th:block th:each="i : ${categories}">
+								<option th:text="${i.categoryName}" th:value="${i.categoryNo}">
+								</option>
+							</th:block>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<input class="form-control form-control-lg" type="text"
+							placeholder="Title" id="title" name="title">
+					</div>
+
+					<div class="form-group">
+						<textarea class="form-control" id="content" name="content"
+							rows="20"></textarea>
+					</div>
+
+					<div class="float-right">
+						<button type="submit" class="btn btn-outline-secondary">save</button>
+						<button type="button" class="btn btn-secondary"
+							onclick="history.back(-1);">cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

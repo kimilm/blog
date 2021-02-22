@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/static/css/bootstrap.css}">
+</head>
+<body class="h-100">
+	<div class="container h-100">
+		<div
+			class="row d-flex justify-content-center align-items-center h-100">
+			<div class="col-lg-4">
+				<div class="card bg-light mb-3">
+					<div class="card-header">Sign Up</div>
+					<div class="card-body">
+						<form th:action="@{/register}" method="post">
+							<label for="id">ID</label> <input type="text"
+								class="form-control mb-3" placeholder="ID" id="id" name="id"> <label
+								for="name">Name</label> <input type="text"
+								class="form-control mb-3" placeholder="name" id="name" name="name">
+							<label for="password">Password</label> <input type="password"
+								class="form-control mb-3" id="password" placeholder="Password" name="password">
+
+							<label for="email">Email address</label> <input type="email"
+								class="form-control mb-3" id="email"
+								aria-describedby="emailHelp" placeholder="Enter email" name="email">
+
+							<div class="d-flex justify-content-end">
+								<button type="submit" class="btn btn-secondary mr-1">confirm</button>
+								<button type="button" class="btn btn-secondary"
+									onclick="history.back(-1);">cancel</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

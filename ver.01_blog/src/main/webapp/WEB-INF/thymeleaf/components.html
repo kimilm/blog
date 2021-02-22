@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<title>Blog</title>
+<link rel="stylesheet" th:href="@{/static/css/bootstrap.css}">
+</head>
+
+<body>
+	<th:block th:fragment="nav">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+			<a class="navbar-brand" th:href="@{/{userId} (userId=${userId})}"
+				th:text="|${userId} Blog|"></a> <input type="hidden" id="userId"
+				th:value="${userId}" />
+
+			<div class="collapse navbar-collapse" id="navbarColor03">
+				<div class="ml-auto">
+					<th:block th:if="${session.userId == null}">
+						<button type="button" class="btn btn-secondary mr-1"
+							onclick="location.href='/signin'">sign in</button>
+						<button type="button" class="btn btn-secondary"
+							onclick="location.href='/signup'">sign up</button>
+					</th:block>
+					<th:block th:unless="${session.userId == null}">
+						<a class="navbar-text mb-0 mr-3"
+							th:href="@{/{userId} (userId=${session.userId})}"
+							th:text="${session.userId}"></a>
+						<button type="button" class="btn btn-secondary"
+							onclick="location.href='/signout'">sign out</button>
+					</th:block>
+				</div>
+			</div>
+		</nav>
+	</th:block>
+
+	<th:block th:fragment="aside">
+		<div class="col-lg-3">
+			<div class="card bg-light mb-3">
+				<div class="card-body text-center" id="userBody">
+					<img th:src="@{/static/img/default.png}" style="max-width: 200px">
+				</div>
+				<div class="card-footer" id="userFooter">Footer</div>
+			</div>
+
+			<div class="form-group">
+				<form th:action="@{/{userId}/search (userId=${userId})}" method="get">
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" placeholder="Search"
+						id="search" name="search">
+					<div class="input-group-append">
+						<button type="submit" class="input-group-text">Search</button>
+					</div>
+				</div>
+				</form>
+			</div>
+
+			<ul class="list-group mb-1" id="categoryList">
+				<li
+					class="list-group-item d-flex justify-content-between align-items-center">
+					Dapibus ac facilisis in <span
+					class="badge badge-secondary badge-pill">14</span>
+				</li>
+			</ul>
+
+			<th:block th:if="${session.userId == userId}">
+				<span id="categoryAdd"
+					class="badge badge-success badge-pill w-100 mb-1">+</span>
+				<button type="button" id="categorySave"
+					class="btn btn-secondary btn-sm float-right d-none">save</button>
+				<button type="button" id="categoryEdit"
+					class="btn btn-secondary btn-sm float-right">edit</button>
+			</th:block>
+		</div>
+
+		<script th:src="@{/static/js/aside.js}"></script>
+	</th:block>
+
+</body>
+
+</html>

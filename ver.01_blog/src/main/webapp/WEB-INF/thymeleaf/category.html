@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/static/css/bootstrap.css}">
+</head>
+
+<body>
+	<div class="container">
+		<div th:replace="components::nav"></div>
+
+		<div class="row">
+			<div th:replace="components::aside"></div>
+
+			<div class="col-lg-9">
+				<div class="jumbotron d-flex justify-content-center">
+					<h1 class="display-3" th:text="${categoryName}"></h1>
+				</div>
+
+				<th:block th:if="${session.userId == userId}">
+					<div class="d-flex justify-content-end mb-3">
+						<button type="button" class="btn btn-outline-secondary mr-1"
+							th:onclick="'location.href=\'' + @{/{userId}/write (userId=${session.userId})} + '\';'">post</button>
+					</div>
+				</th:block>
+
+				<th:block th:each="i: ${posts.content}">
+					<div class="card mb-3">
+						<div class="card-body">
+							<a
+								th:href="@{/{userId}/post(userId=${userId}, postNo=${i.postNo})}"
+								th:text="${i.postTitle}"></a>
+						</div>
+						<div class="card-footer">
+							<p class="card-text"
+								th:text="|${i.category.categoryName} / ${i.postDate}|"></p>
+						</div>
+					</div>
+				</th:block>
+
+				<div th:if="${posts.totalElements > posts.size}">
+					<ul class="pagination justify-content-center">
+						<li class="page-item" th:classappend="${posts.first} ? 'disabled'"><a
+							class="page-link" href="#">&laquo;</a></li>
+
+						<th:block
+							th:each="page: ${#numbers.sequence(1, posts.totalPages)}">
+							<li class="page-item"
+								th:classappend="${page == (posts.number + 1)} ? 'active'">
+								<th:block th:if="${search}">
+									<a class="page-link"
+										th:href="@{/{userId}/category/{categoryName}/{page}/search (userId=${userId}, categoryName=${categoryName}, page=${page}, search=${searchValue})}"
+										th:text=${page}></a>
+								</th:block> <th:block th:unless="${search}">
+									<a class="page-link"
+										th:href="@{/{userId}/category/{categoryName}/{page} (userId=${userId}, categoryName=${categoryName}, page=${page})}"
+										th:text=${page}></a>
+								</th:block>
+
+							</li>
+						</th:block>
+
+						<li class="page-item" th:classappend="${posts.last} ? 'disabled'"><a
+							class="page-link" href="#">&raquo;</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/static/css/bootstrap.css}">
+</head>
+
+<body>
+	<div class="container">
+		<div th:replace="components::nav"></div>
+
+		<div class="row">
+			<div th:replace="components::aside"></div>
+
+			<div class="col-lg-9" th:object="${post}">
+				<div class="card bg-light mb-3">
+					<div class="card-body align-content-center">
+						<h2 class="display-4 text-center" th:text=*{postTitle}></h2>
+						<p class="text-center"
+							th:text="|*{postDate} / *{category.categoryName}|"></p>
+					</div>
+				</div>
+
+				<div class="card mb-3">
+					<div class="card-body">
+						<p class="card-text" th:text=*{postContent}></p>
+					</div>
+				</div>
+
+
+				<th:block th:if="${session.userId == userId}">
+					<div class="d-flex justify-content-end mb-3">
+						<button type="button" class="btn btn-outline-secondary mr-1"
+							th:onclick="'location.href=\'' + @{/{userId}/update?postNo={postNo} (userId=${session.userId}, postNo=*{postNo})} + '\';'">update</button>
+						<button type="button" class="btn btn-outline-secondary"
+							th:onclick="'location.href=\'' + @{/{userId}/delete?postNo={postNo} (userId=${session.userId}, postNo=*{postNo})} + '\';'">delete</button>
+					</div>
+				</th:block>
+
+				<!-- writeComment -->
+				<th:block th:unless="${session.userId == null}">
+					<form id="commentForm"
+						th:action="@{/{userId}/saveComment (userId=${userId})}"
+						method="post">
+						<div class="card mb-3">
+							<input class="card-body" type="text" placeholder="comment"
+								id="inputLarge" name="comment"> <input type="hidden" id="postNo"
+								name="postNo" th:value="*{postNo}">
+							<div class="card-footer">
+								<div class="float-right">
+									<span onclick="document.getElementById('commentForm').submit()">submit</span>
+								</div>
+							</div>
+						</div>
+					</form>
+				</th:block>
+
+				<!-- comments -->
+				<div class="card mb-3" th:each="i: ${comments.content}">
+					<div class="card-body">
+						<p class="card-text" th:text="${i.commentContent}"></p>
+					</div>
+					<div class="card-footer d-flex justify-content-between">
+						<span th:text="|${i.user.userName} / ${i.commentDate}|">user</span>
+						<input type="hidden" th:value="${i.commentNo}">
+						<th:block th:if="${session.userId == i.user.userId}">
+							<div>
+								<span id="commentUpdate">update</span> <span> | </span> <span id="commentDelete">delete</span>
+							</div>
+						</th:block>
+					</div>
+				</div>
+
+				<div th:if="${comments.totalElements > comments.size}">
+					<ul class="pagination justify-content-center">
+						<li class="page-item"
+							th:classappend="${comments.first} ? 'disabled'"><a
+							class="page-link" href="#">&laquo;</a></li>
+
+						<th:block
+							th:each="page: ${#numbers.sequence(1, comments.totalPages)}">
+							<li class="page-item"
+								th:classappend="${page == (comments.number + 1)} ? 'active'">
+								<a class="page-link"
+								th:href="@{/category/{categoryName}/{page} (page=${page}, categoryName=${categoryName})}"
+								th:text=${page}></a>
+							</li>
+						</th:block>
+
+						<li class="page-item"
+							th:classappend="${comments.last} ? 'disabled'"><a
+							class="page-link" href="#">&raquo;</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script th:src="@{/static/js/comment.js}"></script>
+</body>
+
+</html>
